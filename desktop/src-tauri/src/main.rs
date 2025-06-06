@@ -6,6 +6,7 @@ mod cli;
 mod cmd;
 mod config;
 mod panic_hook;
+mod webhook;
 
 #[cfg(feature = "server")]
 mod server;

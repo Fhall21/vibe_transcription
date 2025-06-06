@@ -173,7 +173,12 @@ export function viewModel() {
 					continue
 				}
 
-				const diarizeOptions = { threshold: preference.diarizeThreshold, max_speakers: preference.maxSpeakers, enabled: preference.recognizeSpeakers }
+				const diarizeOptions = {
+					threshold: preference.diarizeThreshold,
+					max_speakers: preference.maxSpeakers,
+					enabled: preference.recognizeSpeakers,
+					webhook_enabled: preference.sendToWebhook
+				}
 				const res: Transcript = await invoke('transcribe', {
 					options,
 					modelPath: preference.modelPath,

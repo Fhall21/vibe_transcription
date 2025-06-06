@@ -357,7 +357,12 @@ export function viewModel() {
 				...preferenceRef.current.modelOptions,
 			}
 			const startTime = performance.now()
-			const diarizeOptions = { threshold: preferenceRef.current.diarizeThreshold, max_speakers: preferenceRef.current.maxSpeakers, enabled: preferenceRef.current.recognizeSpeakers }
+			const diarizeOptions = {
+				threshold: preferenceRef.current.diarizeThreshold,
+				max_speakers: preferenceRef.current.maxSpeakers,
+				enabled: preferenceRef.current.recognizeSpeakers,
+				webhook_enabled: preferenceRef.current.sendToWebhook
+			}
 			const res: transcript.Transcript = await invoke('transcribe', {
 				options,
 				modelPath,

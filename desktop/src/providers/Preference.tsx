@@ -71,6 +71,8 @@ export interface Preference {
 
 	advancedTranscribeOptions: AdvancedTranscribeOptions
 	setAdvancedTranscribeOptions: ModifyState<AdvancedTranscribeOptions>
+	sendToWebhook: boolean
+	setSendToWebhook: ModifyState<boolean>
 }
 
 // Create the context
@@ -112,12 +114,12 @@ const defaultOptions = {
 		verbose: false,
 		lang: 'en',
 		n_threads: 4,
-		temperature: 0.4,
+		temperature: 0.0,
 		max_text_ctx: undefined,
 		word_timestamps: false,
 		max_sentence_len: 1,
 		sampling_strategy: 'beam search' as 'greedy' | 'beam search',
-		sampling_bestof_or_beam_size: 5,
+		sampling_bestof_or_beam_size: 10,
 	},
 	ffmpegOptions: {
 		normalize_loudness: false,
@@ -130,6 +132,7 @@ const defaultOptions = {
 	llmConfig: defaultOllamaConfig(),
 	ytDlpVersion: null,
 	shouldCheckYtDlpVersion: true,
+	sendToWebhook: true,
 }
 
 // Preference provider component
@@ -162,6 +165,7 @@ export function PreferenceProvider({ children }: { children: ReactNode }) {
 	const [llmConfig, setLlmConfig] = useLocalStorage<LlmConfig>('prefs_llm_config', defaultOptions.llmConfig)
 	const [ytDlpVersion, setYtDlpVersion] = useLocalStorage<string | null>('prefs_ytdlp_version', null)
 	const [shouldCheckYtDlpVersion, setShouldCheckYtDlpVersion] = useLocalStorage<boolean>('prefs_should_check_ytdlp_version', true)
+	const [sendToWebhook, setSendToWebhook] = useLocalStorage<boolean>('prefs_send_to_webhook', defaultOptions.sendToWebhook)
 	const [advancedTranscribeOptions, setAdvancedTranscribeOptions] = useLocalStorage<AdvancedTranscribeOptions>('prefs_advanced_transcribe_options', {
 		includeSubFolders: false,
 		saveNextToAudioFile: true,
@@ -271,6 +275,8 @@ export function PreferenceProvider({ children }: { children: ReactNode }) {
 		setYtDlpVersion,
 		shouldCheckYtDlpVersion,
 		setShouldCheckYtDlpVersion,
+		sendToWebhook,
+		setSendToWebhook,
 		advancedTranscribeOptions,
 		setAdvancedTranscribeOptions,
 	}

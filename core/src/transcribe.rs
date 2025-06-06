@@ -91,9 +91,9 @@ pub fn create_normalized_audio(source: PathBuf, additional_ffmpeg_args: Option<V
 }
 
 fn setup_params(options: &TranscribeOptions) -> FullParams {
-    let mut beam_size_or_best_of = options.sampling_bestof_or_beam_size.unwrap_or(5);
+    let mut beam_size_or_best_of = options.sampling_bestof_or_beam_size.unwrap_or(10);
     if beam_size_or_best_of < 1 {
-        beam_size_or_best_of = 5;
+        beam_size_or_best_of = 10;
     }
 
     // Beam search by default
@@ -131,6 +131,11 @@ fn setup_params(options: &TranscribeOptions) -> FullParams {
     params.set_print_timestamps(false);
     params.set_suppress_blank(true);
     params.set_token_timestamps(true);
+    
+    // VAD and quality improvements
+    params.set_suppress_non_speech_tokens(true);
+    params.set_entropy_thold(2.4); // Better voice activity detection
+    params.set_logprob_thold(-1.0); // Improved filtering of low-confidence tokens
 
     if let Some(temperature) = options.temperature {
         tracing::debug!("setting temperature to {temperature}");

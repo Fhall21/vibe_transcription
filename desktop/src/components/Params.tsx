@@ -187,6 +187,21 @@ export default function ModelOptions({ options, setOptions }: ParamsProps) {
 						/>
 					</label>
 
+					<div className="form-control w-full mt-3">
+						<label className="label cursor-pointer">
+							<span className="label-text flex items-center gap-1 cursor-default">
+								<InfoTooltip text="Send diarised transcripts to webhook endpoint for further processing" />
+								Send to Webhook
+							</span>
+							<input
+								type="checkbox"
+								className="toggle toggle-primary"
+								checked={preference.sendToWebhook}
+								onChange={(e) => preference.setSendToWebhook(e.target.checked)}
+							/>
+						</label>
+					</div>
+
 					<div className="label mt-10">
 						<span className="label-text text-2xl font-bold">{t('common.process-with-llm')} ✨</span>
 					</div>
@@ -447,7 +462,7 @@ export default function ModelOptions({ options, setOptions }: ParamsProps) {
 					<label className="form-control w-full">
 						<div className="label">
 							<span className="label-text flex items-center gap-1">
-								<InfoTooltip text="Greedy vs Beam Search: Default is Beam Search (Size 5, Patience -1), which evaluates 5 possible sequences at each step for more accurate results, but is slower. Greedy, on the other hand, selects the best token from the top 5 at each step, making it faster but potentially less accurate." />
+								<InfoTooltip text="Greedy vs Beam Search: Default is Beam Search (Size 10, Patience -1), which evaluates 10 possible sequences at each step for higher accuracy results, but is slower. Greedy, on the other hand, selects the best token from the top candidates at each step, making it faster but potentially less accurate." />
 								{t('common.sampling-strategy')}
 							</span>
 						</div>
@@ -469,13 +484,13 @@ export default function ModelOptions({ options, setOptions }: ParamsProps) {
 					<label className="form-control w-full">
 						<div className="label">
 							<span className="label-text flex items-center gap-1">
-								<InfoTooltip text="best_of: Top candidates in Greedy mode (default: 5) — higher = better accuracy, slower. beam_size: Paths explored in Beam Search (default: 5) — higher = better accuracy, slower." />
+								<InfoTooltip text="best_of: Top candidates in Greedy mode (default: 10) — higher = better accuracy, slower. beam_size: Paths explored in Beam Search (default: 10) — higher = better accuracy, slower." />
 								{preference.modelOptions.sampling_strategy === 'greedy' ? 'Besf of' : 'Beam size'}
 							</span>
 						</div>
 						<input
 							step={1}
-							value={preference.modelOptions.sampling_bestof_or_beam_size ?? 5}
+							value={preference.modelOptions.sampling_bestof_or_beam_size ?? 10}
 							onChange={(e) => setOptions({ ...options, sampling_bestof_or_beam_size: parseInt(e.target.value) })}
 							className="input input-bordered"
 							type="number"

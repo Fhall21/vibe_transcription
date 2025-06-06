@@ -65,6 +65,9 @@ pub fn normalize(input: PathBuf, output: PathBuf, additional_ffmpeg_args: Option
         "1",
         "-c:a",
         "pcm_s16le",
+        // Improved audio preprocessing for better transcription
+        "-af",
+        "highpass=f=80,lowpass=f=8000,afftdn=nf=-25:nt=w", // High/low pass filters + noise reduction
     ]);
 
     cmd.args(additional_ffmpeg_args.unwrap_or_default());

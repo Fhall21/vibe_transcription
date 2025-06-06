@@ -187,6 +187,7 @@ pub struct DiarizeOptions {
     threshold: f32,
     max_speakers: usize,
     enabled: bool,
+    webhook_enabled: bool,
 }
 
 impl Default for DiarizeOptions {
@@ -195,6 +196,7 @@ impl Default for DiarizeOptions {
             enabled: false,
             threshold: 0.0,
             max_speakers: 0,
+            webhook_enabled: false,
         }
     }
 }
@@ -342,6 +344,15 @@ pub async fn transcribe(
         }
         Ok(transcribe_result) => {
             let transcript = transcribe_result.with_context(|| format!("options: {:?}", options))?;
+            
+            // Send to webhook if both diarization and webhook are enabled
+            if diarize_options.enabled && diarize_options.webhook_enabled {
+                if let Err(e) = crate::webhook::send_transcript_to_webhook(&transcript).await {
+                    tracing::error!("Failed to send transcript to webhook: {:?}", e);
+                    // Continue anyway - don't fail the transcription
+                }
+            }
+            
             Ok(transcript)
         }
     }
